@@ -8,7 +8,7 @@ import lombok.Data;
 
 
 @Data
-@Entity
+@Entity(name = "Question")
 public class Question {
 
     @Id
@@ -20,7 +20,7 @@ public class Question {
     private String option3;
     private String option4;
     private String rightAnswer;
-private String difficulty_level;
+    private String difficulty_level;
     private String category;
 
 }
