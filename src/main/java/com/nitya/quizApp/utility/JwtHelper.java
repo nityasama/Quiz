@@ -6,7 +6,10 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
@@ -15,32 +18,45 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+@Component
 public class JwtHelper {
-    private static final String SECRET = "xRont3J8BXnUlVP7WJDxEZcfSQ8IiMQRKI+tA7dzdMg=";
-    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
-    private static final int MINUTES = 60;
+//    private static final String SECRET = "xRont3J8BXnUlVP7WJDxEZcfSQ8IiMQRKI+tA7dzdMg=";
+//    @Value("${jwt.secret}")
+//    private static String secret;
+//    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+//    private static final int MINUTES = 5;
 
-    public static String generateToken(String email) {
+    @Value("${jwt.secret}")
+    private String secret;
+    private Key secretKey;
+    private final int MINUTES = 5;
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    }
+
+    public String generateToken(String email) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
-                .signWith(SECRET_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 
-    public static Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
-    public static String extractUsername(String token) {
+    public String extractUsername(String token) {
         return getTokenBody(token).getSubject();
     }
-    private static Claims getTokenBody(String token) {
+    private Claims getTokenBody(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith((SecretKey) SECRET_KEY)
+                    .verifyWith((SecretKey) secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
@@ -48,7 +64,7 @@ public class JwtHelper {
             throw new AccessDeniedException("Access denied: " + e.getMessage());
         }
     }
-    private static boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         Claims claims = getTokenBody(token);
         return claims.getExpiration().before(new Date());
     }

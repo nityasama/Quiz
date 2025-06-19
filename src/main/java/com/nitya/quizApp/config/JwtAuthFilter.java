@@ -23,9 +23,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
     private final ObjectMapper objectMapper;
 
-    public JwtAuthFilter(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper) {
+    private final JwtHelper jwtHelper;
+
+    public JwtAuthFilter(UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, JwtHelper jwtHelper) {
         this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
+        this.jwtHelper = jwtHelper;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String username = null;
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7);
-                username = JwtHelper.extractUsername(token);
+                username = jwtHelper.extractUsername(token);
             }
 
 //      If the accessToken is null. It will pass the request to next filter in the chain.
@@ -56,7 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 //       If any accessToken is present, then it will validate the token and then authenticate the request in security context
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (JwtHelper.validateToken(token, userDetails)) {
+                if (jwtHelper.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

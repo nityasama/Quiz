@@ -26,6 +26,9 @@ public class UserAuthenticationController {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    @Autowired
+    JwtHelper jwtHelper;
+
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
         return userAuthenticationService.signUp(signUpRequest);
@@ -40,13 +43,13 @@ public class UserAuthenticationController {
             throw e;
         }
 
-        String token = JwtHelper.generateToken(loginRequest.email());
+        String token = jwtHelper.generateToken(loginRequest.email());
         loginService.addLoginAttempt(loginRequest.email(), true);
         return ResponseEntity.ok(new LoginResponse(loginRequest.email(), token));
     }
     @GetMapping(value = "/loginAttempts")
     public ResponseEntity<List<LoginAttemptResponse>> loginAttempts(@RequestHeader("Authorization") String token) {
-        String email = JwtHelper.extractUsername(token.replace("Bearer ", ""));
+        String email = jwtHelper.extractUsername(token.replace("Bearer ", ""));
         List<LoginAttempts> loginAttempts = loginService.findRecentLoginAttempts(email);
         return ResponseEntity.ok(convertToDTOs(loginAttempts));
     }
