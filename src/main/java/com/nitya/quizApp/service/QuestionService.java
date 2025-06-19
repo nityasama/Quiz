@@ -1,6 +1,6 @@
 package com.nitya.quizApp.service;
 
-import com.nitya.quizApp.dao.QuestionDao;
+import com.nitya.quizApp.repository.QuestionRepository;
 import com.nitya.quizApp.model.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class QuestionService {
     @Autowired
-    QuestionDao questionDao;
+    QuestionRepository questionDao;
     public ResponseEntity<List<Question>> getAllQuestions(){
     try {
         return new ResponseEntity<>(questionDao.findAll(), HttpStatus.OK);

@@ -1,11 +1,11 @@
 package com.nitya.quizApp.service;
 
-import com.nitya.quizApp.dao.QuestionDao;
-import com.nitya.quizApp.dao.QuizDao;
+import com.nitya.quizApp.repository.QuestionRepository;
+import com.nitya.quizApp.repository.QuizRepository;
 import com.nitya.quizApp.model.Question;
 import com.nitya.quizApp.model.QuestionWrapper;
 import com.nitya.quizApp.model.Quiz;
-import com.nitya.quizApp.model.Response;
+import com.nitya.quizApp.model.QuizResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +18,10 @@ import java.util.Optional;
 @Service
 public class QuizService {
     @Autowired
-    QuizDao quizDao;
+    QuizRepository quizDao;
 
     @Autowired
-    QuestionDao questionDao;
+    QuestionRepository questionDao;
 
     public ResponseEntity<String> createQuiz(String category, Integer numQ, String title) {
 
@@ -49,13 +49,13 @@ public class QuizService {
 
     }
 
-    public ResponseEntity<Integer> submitAndCalculateQuiz(Integer id, List<Response> responses) {
+    public ResponseEntity<Integer> submitAndCalculateQuiz(Integer id, List<QuizResponse> responses) {
 
         Quiz quiz=quizDao.findById(id).get();
         List<Question> questions=quiz.getQuestions();
         int right=0;
         int i=0;
-        for(Response response: responses){
+        for(QuizResponse response: responses){
             if(response.getResponse().equals(questions.get(i).getRightAnswer())){
                 right++;
             }

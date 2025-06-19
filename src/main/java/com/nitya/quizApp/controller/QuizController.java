@@ -1,11 +1,9 @@
 package com.nitya.quizApp.controller;
 
-import com.nitya.quizApp.model.Question;
 import com.nitya.quizApp.model.QuestionWrapper;
-import com.nitya.quizApp.model.Response;
+import com.nitya.quizApp.model.QuizResponse;
 import com.nitya.quizApp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +29,7 @@ public class QuizController {
     }
 
     @PostMapping("submit/{id}")
-    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<Response> responses){
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<QuizResponse> responses){
         return  quizService.submitAndCalculateQuiz(id, responses);
     }
 }
