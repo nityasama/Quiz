@@ -20,12 +20,6 @@ import java.util.Date;
 
 @Component
 public class JwtHelper {
-//    private static final String SECRET = "xRont3J8BXnUlVP7WJDxEZcfSQ8IiMQRKI+tA7dzdMg=";
-//    @Value("${jwt.secret}")
-//    private static String secret;
-//    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
-//    private static final int MINUTES = 5;
-
     @Value("${jwt.secret}")
     private String secret;
     private Key secretKey;
