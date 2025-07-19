@@ -1,6 +1,8 @@
 package com.nitya.quizApp.controller;
 
+import com.nitya.quizApp.exceptions.NotFoundException;
 import com.nitya.quizApp.model.*;
+import com.nitya.quizApp.repository.UserRepository;
 import com.nitya.quizApp.service.LoginService;
 import com.nitya.quizApp.service.UserAuthenticationService;
 import com.nitya.quizApp.utility.JwtHelper;
@@ -25,6 +27,8 @@ public class UserAuthenticationController {
     LoginService loginService;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     JwtHelper jwtHelper;
@@ -42,8 +46,11 @@ public class UserAuthenticationController {
             loginService.addLoginAttempt(loginRequest.email(), false);
             throw e;
         }
+        // Fetch the user from the database to get their roles
+        User user = userRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-        String token = jwtHelper.generateToken(loginRequest.email());
+        String token = jwtHelper.generateToken(loginRequest.email(),user.getRoleList());
         loginService.addLoginAttempt(loginRequest.email(), true);
         return ResponseEntity.ok(new LoginResponse(loginRequest.email(), token));
     }

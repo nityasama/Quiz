@@ -4,16 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 
 public record LoginRequest (
     @Schema(description = "email", example = "mina@gmail.com")
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email format")
     String email,
-//    @Schema(description = "role", example = "student/teacher")
-//    @NotBlank(message = "role cannot be blank")
-//    String role,
 
     @Schema(description = "password", example = "123456")
     @NotBlank(message = "Password cannot be blank")

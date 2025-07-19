@@ -2,8 +2,11 @@ package com.nitya.quizApp.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SignUpRequest {
@@ -18,10 +21,11 @@ public class SignUpRequest {
     @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
     private String password;
 
-    @NotBlank(message = "Role cannot be blank")
-    private String role;
+    @NotNull
+    @Size(min = 1)
+    private List<String> role;
 
-    public SignUpRequest(String name, String email, String password, String role) {
+    public SignUpRequest(String name, String email, String password, List<String> role) {
         this.name = name;
         this.email = email;
         this.password = password;

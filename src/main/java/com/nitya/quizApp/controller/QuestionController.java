@@ -5,6 +5,7 @@ import com.nitya.quizApp.model.Question;
 import com.nitya.quizApp.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class QuestionController {
         return questionService.getQuestionsById(id);
     }
 
+    @PreAuthorize("hasRole('teacher')")
     @PostMapping("add")
     public ResponseEntity<String> addQuestion(@RequestBody Question question){
 

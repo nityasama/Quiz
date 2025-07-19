@@ -17,6 +17,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtHelper {
@@ -30,10 +31,11 @@ public class JwtHelper {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, List<String> role) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(email)
+                .claim("roles", role) //Adding roles claim here
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(MINUTES, ChronoUnit.MINUTES)))
                 .signWith(secretKey)
