@@ -23,7 +23,7 @@ public class QuizController {
         return quizService.createQuiz(category, numQ, title);
 
     }
-
+    //This endpoint can be used by bothe student & teacher
     @GetMapping("get/{id}")
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(@PathVariable Integer id){
             return quizService.getQuizQuestions(id);

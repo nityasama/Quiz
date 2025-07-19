@@ -17,19 +17,19 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
+    @PreAuthorize("hasRole('teacher')")
     @GetMapping("allQuestions")
-    public ResponseEntity<List<Question>> getAllQuestions(){
+    public ResponseEntity<List<Question>> getAllQuestions() {
 
         return questionService.getAllQuestions();
 
     }
-
-
     @GetMapping("category/{category}")
     public List<Question> getQuestionByCategory(@PathVariable String category){
         return questionService.getQuestionsByCategory(category);
     }
 
+    @PreAuthorize("hasRole('teacher')")
     @GetMapping("id/{id}")
     public Optional<Question> getQuestionByID(@PathVariable Integer id){
         return questionService.getQuestionsById(id);
