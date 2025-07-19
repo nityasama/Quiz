@@ -6,7 +6,6 @@ A simple Spring Boot REST API project for managing quizzes, featuring secure aut
 
 - User registration and login with JWT-based authentication
 - Secure endpoints for creating and retrieving quiz data
-- Role-based access control
 - PostgreSQL database integration
 - Follows RESTful API best practices
 
@@ -52,19 +51,15 @@ mvn spring-boot:run
 - `POST /auth/login` — Authenticate and receive a JWT
 - `GET /quiz/category` — Retrieve quizzes (JWT required) based on quiz category(Java, Python etc)
 - `POST /quiz` — Create a new quiz (JWT required)
-- 'POST /quiz/submit/{quizId}' — Calculates the result for a submitted quiz
-- 'POST /questions/add' — Create a question to add into Quiz
-- 'GET /question' — Retrieve questions based on Category/Id or retrieves All questions(seperate endpoints for each requirement)
-- 'GET /auth/loginAttempts' — Retrieves the information about the login attempts done by the user 
+- `POST /quiz/submit/{quizId}`  — Calculates the result for a submitted quiz
+- `POST /questions/add` — Create a question to add into Quiz
+- `GET /question` — Retrieve questions based on Category/Id or retrieves All questions(seperate endpoints for each requirement)
+- `GET /auth/loginAttempts` — Retrieves the information about the login attempts done by the user 
 
 ## Usage
 
 - Use a tool like Postman to test the API endpoints.
 - Register a user, log in to receive a JWT, and include the token in the `Authorization` header (`Bearer <token>`) for protected endpoints.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
