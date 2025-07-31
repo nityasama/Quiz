@@ -1,6 +1,10 @@
 pipeline {
-  agent any
-
+    agent {
+        docker {
+          image 'maven:3.8.7-openjdk-17'
+          args '-v /root/.m2:/root/.m2' // optional volume for caching Maven repo
+        }
+    }
   environment {
     DOCKERHUB_CREDENTIALS = 'dockerhub-credentials'
     IMAGE_NAME = 'nityasama/quiz-app'
